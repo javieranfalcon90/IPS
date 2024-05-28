@@ -1,0 +1,181 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <div class="row breadcrumb-wrapper justify-content-between">
+        <div class="col-6">
+            <h1>Evaluación</h1>
+        </div>
+    </div>
+
+    <div class="card card-default">
+        <div class="card-header card-header-border-bottom">
+            <h2>Formulario de evaluación de solicitud #{{ solicitud.id }}</h2>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+    			{{ form_start(form,{ 'attr': {'class': 'form-horizontal', 'id': 'form', 'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+
+                    <div class="form-group">
+                        <label>Exposición estimada durante el periodo cubierto*</label>
+                        {{ form_widget(form.exposicionestimada, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>El TAC u otras autoridades reguladoras han implementado acciones debido a razones de seguridad*</label>
+                        {{ form_widget(form.accionesdeseguridad, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Han existido cambios en la Información de referencia del producto*</label>
+                        {{ form_widget(form.cambiosdeinformacion, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Información de seguridad derivada de ensayos clínicos, estudios post-comercialización, registros, publicaciones, otras*</label>
+                        {{ form_widget(form.informaciondeestudios, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Análisis de casos individuales en el período*</label>
+                        {{ form_widget(form.casosindividuales, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Clasificación de los riesgos importantes*</label>
+                                {{ form_widget(form.clasificacionriesgosimportantes, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                                <span class="error"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Clasificación de los riesgos potenciales*</label>
+                                {{ form_widget(form.clasificacionriesgospotenciales, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                                <span class="error"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label>Clasificación de los riesgos de información faltante*</label>
+                                {{ form_widget(form.clasificacionriesgosinformacionfaltante, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                                <span class="error"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+                    <div class="form-group">
+                        <label>Caracterización de riesgos*</label>
+                        {{ form_widget(form.caracterizacionderiesgos, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Señales de seguridad*</label>
+                        {{ form_widget(form.sennalesdeseguridad, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Evaluación beneficio-riesgo*</label>
+                        {{ form_widget(form.evaluacionbeneficioriesgo, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Plan de gestión de riesgo*</label>
+                        {{ form_widget(form.gestionderiesgo, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Conclusiones del titular*</label>
+                        {{ form_widget(form.conclusionesdeltitular, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+
+
+
+
+                    <div class="form-group">
+                        <label>Resultado*</label>
+                        {{ form_widget(form.resultado, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha*</label>
+                        {{ form_widget(form.fecha, { 'attr': {'class': 'form-control datetimepicker', 'autocomplete': 'off', 'required': 'required'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Información a completar / Recomendaciones</label>
+                        {{ form_widget(form.recomendacion, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3'} }) }}
+                        <span class="error"></span>
+                    </div>
+
+                    <br>
+
+                    <div class="form-group row">
+                        <div class="col-1">
+                            <label for="checkbox">Notificación</label>
+                        </div>
+                        <div class="col-11">
+                            <label class="control outlined control-checkbox checkbox-primary">Notificar vía correo al supervisor
+                            <input name="notificar" type="checkbox" {{ notificacion ? 'checked="checked"' : '' }}>
+                            <div class="control-indicator"></div>
+                        </label>
+                        </div>
+                    </div>
+
+    				<div class="form-footer pt-4 mt-5 border-top">
+    					<button type="submit" class="btn btn-primary btn-default">Guardar</button>
+    					<a class="btn btn-secondary btn-default" href="{{ path('solicitud_show', {id: solicitud.id}) }}">Cancel</a>
+    					
+    				</div>
+
+    			{{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+
+
+        $(document).ready(function() {
+
+
+
+		});
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "layout.html.twig" %}
+
+{% import '@DHAuditor/Audit/helpers/helper.html.twig' as helper %}
+
+{% block content %}
+
+    <div class="row breadcrumb-wrapper justify-content-between">
+        <div class="col-6">
+            <h1>Audit</h1>
+        </div>
+    </div>
+
+    <div class="card card-default">
+        <div class="card-header card-header-border-bottom">
+            <h2>Listado de entidades auditadas</h2>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <table class="table table-hover">
+                        <thead>
+                        <th>Entidad</th>
+                        <th>Tabla</th>
+                        <th>Actividad</th>
+                        <th width="10%"></th>
+                        </thead>
+                        <tbody>
+                        {% for entity, table in audited %}
+                            <tr>
+                                <td><code>{{ entity|escape }}</code></td>
+                                <td>{{ table|escape }}</td>
+                                <td>{{ reader.createQuery(entity).count() ~ ' operaciones' }}</td>
+                                <td>
+                                    <a href="{{ path('dh_auditor_show_entity_history', {'entity': helper.namespaceToParam(entity)}) }}"><i class="fas fa-search"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+    select_menu('audit_menu');
+
+        $(document).ready(function() {
+
+$('.table').DataTable({
+            autoWidth: false,
+            iDisplayLength: 20, 
+            order: [[0, "DESC"]], // Define el orden por defecto y la columna a ordenar
+            columnDefs: [
+                { responsivePriority: 1, targets: -1 },
+                
+                { orderable: false, targets: [3] }, //Define las columnas que  no van a ser ordenables
+            ],
+            deferRender: true, //Opcion que permite una mayor velocidad de inicializacion(disponible desde la version 1.10)
+            language: {
+                paginate: {
+                    first: "<<",
+                    previous: "<",
+                    next: ">",
+                    last: ">>"
+                },
+                sLengthMenu: "Mostrar _MENU_ registros",
+                sInfo: "Mostrando _START_ al _END_ de _TOTAL_ elementos",
+                sInfoEmpty: "No hay datos para mostrar",
+                sEmptyTable: "No hay datos para mostrar",
+                sInfoFiltered: "(filtrado de _MAX_ elementos en total)",
+                sLoadingRecords: "Cargando...",
+                sProcessing: "Procesando...",
+                sSearch: "Buscar:",
+                sZeroRecords: "No se encontraron resultados"
+            },
+            processing: true,
+        });
+
+        });
+
+    </script>
+
+{% endblock %}
+

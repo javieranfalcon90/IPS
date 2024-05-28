@@ -1,0 +1,50 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row breadcrumb-wrapper justify-content-between">
+        <div class="col-6">
+            <h1>Solicitante</h1>
+        </div>
+    </div>
+
+
+    <div class="card card-default">
+        <div class="card-header card-header-border-bottom">
+            <h2>Formulario de solicitantes</h2>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+    			{{ form_start(form,{ 'attr': {'class': 'form-horizontal', 'id': 'form', 'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+    				<div class="form-group">
+    					<label>Nombre*</label>
+    					{{ form_widget(form.nombre, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'required': 'required'} }) }}
+    					<span class="error"></span>
+    				</div>
+    				<div class="form-footer pt-4 mt-5 border-top">
+    					<button type="submit" class="btn btn-primary btn-default">Guardar</button>
+    					<a class="btn btn-secondary btn-default" href="{{ path('solicitante_index') }}">Cancel</a>
+    				</div>
+    			{{ form_end(form) }}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+    select_menu('configuracion_menu');
+
+
+    </script>
+
+{% endblock %}
+

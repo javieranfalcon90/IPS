@@ -1,0 +1,111 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row breadcrumb-wrapper justify-content-between" style="margin-bottom: 19.6px !important;">
+        <div class="col-6">
+            <h1>Asignación</h1>
+        </div>
+        <div class="col-6 text-right">
+        {% if is_granted('ROLE_ADMINISTRADOR') or is_granted('ROLE_SUPERVISOR') %}
+            <a class="btn btn-primary" href="{{ path('asignacion_new') }}"> Insertar</a>
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="card card-default">
+        <div class="card-header card-header-border-bottom justify-content-between">
+            <h2>Listado de asignaciones</h2>
+
+            <div class="col-2 pr-0">
+
+                <div class="input-group mt-0 mr-1 mb-0">      
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                              <span class="fas fa-calendar"></span>
+                        </div>
+                    </div>
+                    <input type="text" id="anno" class="form-control" value="{{ anno }}">
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <table class="table table-hover" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Trámite</th>
+                            <th>Producto</th>
+                            <th>Fecha</th>
+                            <th>Evaluador</th>
+                            <th></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+
+    select_menu('asignacion_menu');
+
+
+        $(document).ready(function() {
+
+
+            $("#anno").datetimepicker({
+              locale: "es",
+              format: "YYYY"
+            });
+
+            $("#anno").datetimepicker().on("dp.change", function(ev) {
+                var anno = $("#anno").val();
+
+                dataTable.destroy();
+                Nosortcol = [0,5];
+                route = Routing.generate('asignacion_dataTable',{ anno: anno });
+                dataTable = createDataTable(Nosortcol, route);
+
+            });
+
+            /* Generando el componente DataTable */
+            var anno = $("#anno").val();
+            var Nosortcol = [0,5];
+            var route = Routing.generate('asignacion_dataTable',{ anno: anno });
+            var dataTable = createDataTable(Nosortcol, route);
+
+
+            /* Funcionalidad para el comportamiento de la confirmación para eliminar elemento */
+            $("#dataTable tbody").on("click", ".eliminar", function() {
+              var id = $(this).attr("id");
+              var token = $(this).attr("token");
+              var rutaEliminar = Routing.generate("asignacion_delete", { id: id });
+              var rutaRedirect = Routing.generate("asignacion_index");
+              createDelete(rutaEliminar, rutaRedirect, token);
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

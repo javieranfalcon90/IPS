@@ -1,0 +1,52 @@
+security:
+    enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        in_memory:
+            memory:
+                users:
+                    SuperAdministrador: { password: $2y$13$NKuzZGv.TH6y9uXtsl4dKeHpsGS1QLmrQz.pMyxhe2dVhxVorXhDK, roles: 'ROLE_ADMINISTRADOR' }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: 'App\Entity\User'
+                property: 'username'
+        chain_provider:
+            chain:
+                providers: [in_memory, app_user_provider]
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: chain_provider
+            form_login:
+                always_use_default_target_path: true
+                login_path: app_login
+                check_path: app_login_check
+                default_target_path: dashboard                
+            logout:
+                path: app_logout
+                target: app_login
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/audit, roles: [ROLE_ADMINISTRADOR] }  
+        - { path: ^/configuracion/*, roles: [ROLE_ADMINISTRADOR, ROLE_SUPERVISOR] } 
+
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }

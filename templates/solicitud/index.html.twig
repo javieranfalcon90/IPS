@@ -1,0 +1,160 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row breadcrumb-wrapper justify-content-between" style="margin-bottom: 19.6px !important;">
+        <div class="col-6">
+            <h1>Solicitud</h1>
+        </div>
+        {% if is_granted('ROLE_ADMINISTRADOR') or is_granted('ROLE_EVALUADOR') %}
+            <div class="col-6 text-right">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#asignacion">
+                  {{asignaciones|length}} Asignaciones
+                </button>    
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="asignacion" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Asignaciones Pendientes a Procesar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="col-12">
+
+                    
+                        {% if asignaciones|length > 0 %}
+                            <table class="table card-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Trámite</th>
+                                        <th>Producto</th>
+                                        <th>Evaluador</th>
+                                        <th>Fecha</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                            {% for asig in asignaciones %}
+                                <tbody>
+                                <tr>
+                                    <td style="width: 10% !important"><i class="fas fa-clipboard-check fa-2x"></i></td>
+                                    <td style="width: 20% !important">{{ asig.tramite }}</td>
+                                    <td style="width: 40% !important">{{ asig.producto.nombre }}</td>
+                                    <td>{{ asig.evaluador.nombre }}</td>
+                                    <td>{{ asig.fecha|date('d-m-Y') }}</td>
+                                    <td class="text-right">
+                                        <a href="{{ path('solicitud_new', {'asignacion': asig.id}) }}" class="btn btn-primary">Procesar</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                                
+                            {% endfor %}
+                            </table>
+                        {% else %}
+                            <div class="col-12 text-center">No hay asignaciones pendientes de procesar...</div>
+                        {% endif %}
+                    
+
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="card card-default">
+        <div class="card-header card-header-border-bottom justify-content-between">
+            <h2>Listado de solicitudes</h2>
+
+            <div class="col-2 pr-0">
+
+                <div class="input-group mt-0 mr-1 mb-0">      
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                              <span class="fas fa-calendar"></span>
+                        </div>
+                    </div>
+                    <input type="text" id="anno" class="form-control" value="{{ anno }}">
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <table class="table table-hover" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Codigo</th>
+                            <th>Trámite</th>
+                            <th>Producto</th>
+                            <th>Solicitante</th>
+                            <th>Evaluador</th>
+                            <th>Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+    select_menu('solicitud_menu');
+
+
+        $(document).ready(function() {
+
+            $("#anno").datetimepicker({
+              locale: "es",
+              format: "YYYY"
+            });
+
+            $("#anno").datetimepicker().on("dp.change", function(ev) {
+                var anno = $("#anno").val();
+
+                dataTable.destroy();
+                Nosortcol = [0];
+                route = Routing.generate('solicitud_dataTable',{ anno: anno });
+                dataTable = createDataTable(Nosortcol, route);
+
+            });
+
+
+
+            /* Generando el componente DataTable */
+            var anno = $("#anno").val();
+            var Nosortcol = [0];
+            var route = Routing.generate('solicitud_dataTable',{ anno: anno });
+            var dataTable = createDataTable(Nosortcol, route);
+
+        });
+
+    </script>
+
+{% endblock %}

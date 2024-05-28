@@ -1,0 +1,267 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <div class="row breadcrumb-wrapper justify-content-between">
+        <div class="col-6">
+            <h1>Solicitud</h1>
+        </div>
+    </div>
+
+
+    <div class="card card-default">
+        <div class="card-header card-header-border-bottom">
+            <h2>Formulario de solicitudes</h2>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+    			{{ form_start(form,{ 'attr': {'class': 'form-horizontal', 'id': 'form', 'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="media widget-media p-4 bg-white border" >
+                            <div class="icon rounded-circle mr-4 bg-primary" style="line-height: 73px !important">
+                                <i class="fas fa-hashtag text-white"></i>
+                            </div>
+
+                            <div class="media-body align-self-center">
+                                <h4 class="text-primary mb-2">{{ asignacion.tramite }}</h4>
+                                <p>Trámite</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="media widget-media p-4 bg-white border" >
+                            <div class="icon rounded-circle mr-4 bg-primary" style="line-height: 73px !important">
+                                <i class="fas fa-flask text-white"></i>
+                            </div>
+
+                            <div class="media-body align-self-center">
+                                <h4 class="text-primary mb-2">{{ asignacion.producto.nombre }}</h4>
+                                <p>Producto</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                
+                <div class="row">
+
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Número de Registro*</label>
+                            {{ form_widget(form.noregistro, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>  
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fecha*</label>
+                            {{ form_widget(form.fecha, { 'attr': {'class': 'form-control datetimepicker', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fortaleza*</label>
+                            {{ form_widget(form.fortaleza, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>   
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Forma Farmacéutica*</label>
+                            {{ form_widget(form.formafarmaceutica, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Vía de Administración*</label>
+                            {{ form_widget(form.viaadministracion, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Solicitante*</label>
+                            {{ form_widget(form.solicitante, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Titular*</label>
+                            {{ form_widget(form.titular, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Nacionalidad del Titular*</label>
+                            {{ form_widget(form.nacionalidadtitular, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div> 
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Número IPS*</label>
+                            {{ form_widget(form.noips, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>IPS Anterior</label>
+                            {{ form_widget(form.ipsanterior, { 'attr': {'class': 'form-control datetimepicker', 'autocomplete': 'off'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Período Evaluado*</label>
+                            {{ form_widget(form.periodoevaluado, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Período Evaluado Adecuado*</label>
+                            {{ form_widget(form.periodoevaluadoadecuado, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Motivo de Presentación*</label>
+                            {{ form_widget(form.motivopresentacion, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Regulación Nacional/ICH E2C*</label>
+                            {{ form_widget(form.regulacionpermitida, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Sección Faltante*</label>
+                            {{ form_widget(form.seccionfaltante, { 'attr': {'class': 'form-control select2', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fecha de Inscripción*</label>
+                            {{ form_widget(form.fechainscripcionmed, { 'attr': {'class': 'form-control datetimepicker', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fecha de Última Renovación</label>
+                            {{ form_widget(form.fechaultimarenovacion, { 'attr': {'class': 'form-control datetimepicker', 'autocomplete': 'off'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Indicaciones Aprobadas*</label>
+                            {{ form_widget(form.indicacionesaprobadas, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fecha de RCP Vigente*</label>
+                            {{ form_widget(form.fecharcpvigente, { 'attr': {'class': 'form-control datetimepicker', 'autocomplete': 'off'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Fecha Internacional de Nacimiento</label>
+                            {{ form_widget(form.fechainternacionalmed, { 'attr': {'class': 'form-control datetimepicker', 'autocomplete': 'off'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Países de Comercialización*</label>
+                            {{ form_widget(form.paises, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'required': 'required'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Observaciones</label>
+                            {{ form_widget(form.observaciones, { 'attr': {'class': 'form-control', 'autocomplete': 'off', 'rows': '3'} }) }}
+                            <span class="error"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+				<div class="form-footer pt-4 mt-5 border-top">
+					<button type="submit" class="btn btn-primary btn-default">Guardar</button>
+					<a class="btn btn-secondary btn-default" href="{{ path('solicitud_index') }}">Cancel</a>
+					
+				</div>
+
+    			{{ form_end(form) }}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+        select_menu('solicitud_menu');
+
+    </script>
+
+{% endblock %}

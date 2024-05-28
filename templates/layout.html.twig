@@ -1,0 +1,234 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+          <div class="page-preloader"></div>
+
+
+
+<div class="wrapper">
+      
+  <aside class="left-sidebar bg-sidebar">
+    <div id="sidebar" class="sidebar sidebar-with-footer">
+      <!-- Aplication Brand -->
+      <div class="app-brand">
+        <a href="#">
+          <svg class="brand-icon" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" width="30" height="33" viewBox="0 0 30 33">
+            <g fill="none" fill-rule="evenodd">
+              <path class="logo-fill-blue" fill="#7DBCFF" d="M0 4v25l8 4V0zM22 4v25l8 4V0z"></path>
+              <path class="logo-fill-white" fill="#FFF" d="M11 4v25l8 4V0z"></path>
+            </g>
+          </svg>
+          <span class="brand-name">Vigilancia IPS</span>
+        </a>
+      </div>
+      <!-- begin sidebar scrollbar -->
+        <div class="sidebar-scrollbar">
+
+          <!-- sidebar menu -->
+          <ul class="nav sidebar-inner" id="sidebar-menu">
+            
+            <li class="has-sub" id="dashboard_menu">
+              <a class="sidenav-item-link" href="{{ path('dashboard') }}">    
+                <i class="fas fa-home"></i>
+                <span class="nav-text">Inicio</span></b>
+              </a> 
+            </li>
+            {% if is_granted('ROLE_SUPERVISOR') or is_granted('ROLE_ADMINISTRADOR') %}
+            <li class="has-sub" id="asignacion_menu">
+              <a class="sidenav-item-link" href="{{ path('asignacion_index') }}">
+                <i class="fas fa-clipboard-check"></i>
+                <span class="nav-text">Asignacion</span>
+              </a> 
+            </li>
+            {% endif %}
+
+            <li class="has-sub" id="solicitud_menu">
+              <a class="sidenav-item-link" href="{{ path('solicitud_index') }}">
+                <i class="fas fa-file-contract"></i>
+                <span class="nav-text">Solicitud</span>
+              </a> 
+            </li>
+
+            {% if is_granted('ROLE_SUPERVISOR') or is_granted('ROLE_ADMINISTRADOR') %}
+            <li class="has-sub expand" id="configuracion_menu">
+              <a class="sidenav-item-link collapsed" href="javascript:void(0)" data-toggle="collapse" data-target="#configuracion" aria-expanded="false" aria-controls="dashboard">
+                <i class="fas fa-wrench"></i>
+                <span class="nav-text">Configuración</span> <b class="caret"></b>
+              </a>
+
+              <ul class="collapse" id="configuracion" data-parent="#sidebar-menu">
+                  <div class="sub-menu">
+
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('formafarmaceutica_index') }}">
+                      <span class="nav-text"> - Forma Farmacéutica - </span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('viaadministracion_index') }}">
+                      <span class="nav-text"> - Vía de Administración -</span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('motivopresentacion_index') }}">
+                      <span class="nav-text"> - Motivo de Presentación -</span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('seccionfaltante_index') }}">
+                      <span class="nav-text"> - Sección Faltante -</span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('solicitante_index') }}">
+                      <span class="nav-text"> - Solicitante -</span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('producto_index') }}">
+                      <span class="nav-text"> - Producto -</span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('titular_index') }}">
+                      <span class="nav-text"> - Titular -</span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('evaluador_index') }}">
+                      <span class="nav-text"> - Evaluador -</span> 
+                      </a>
+                    </li>
+                    <li >
+                      <a class="sidenav-item-link" href="{{ path('resultado_index') }}">
+                      <span class="nav-text"> - Resultado -</span> 
+                      </a>
+                    </li>
+
+                  </div>
+              </ul>
+            </li>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMINISTRADOR') %}
+            <li class="has-sub" id="usuario_menu">
+              <a class="sidenav-item-link" href="{{ path('user_index') }}">
+                <i class="fas fa-user"></i>
+                <span class="nav-text">Usuario</span>
+              </a>
+            </li>
+            <li class="has-sub" id="audit_menu">
+              <a class="sidenav-item-link" href="{{ path('dh_auditor_list_audits') }}">
+                <i class="fas fa-tasks"></i>
+                <span class="nav-text">Audit</span>
+              </a>
+            </li>
+            {% endif %}
+        
+          </ul>
+
+        </div>
+      </div>
+  </aside>
+
+      
+
+      <div class="page-wrapper">
+
+          <header class="main-header " id="header">
+            <nav class="navbar navbar-static-top navbar-expand-lg justify-content-between">
+              <!-- Sidebar toggle button -->
+              <button id="sidebar-toggler" class="sidebar-toggle text-primary">
+                ≡
+                <span class="sr-only">Toggle navigation</span>
+              </button>
+
+              <div class="navbar-right ">
+                <ul class="nav navbar-nav">
+                  <!-- User Account -->
+                  <li class="dropdown user-menu border-left">
+                    <button href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                      <i class="user-image fas fa-user-circle text-primary" alt="User Image"></i>
+                      <span class="d-none d-lg-inline-block"> {{ app.user.userIdentifier }} </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                      <!-- User image -->
+                      <li class="dropdown-header">
+                        <i class="fas fa-2x fa-user-circle mr-2 mt-2 text-primary align-top"></i>
+                        <div class="d-inline-block">
+                          {{ app.user.userIdentifier }} 
+
+                          {% for rol in app.user.roles %}
+                            <small class="pt-1">{{ rol }}</small>
+                          {% endfor %}
+                          
+                        </div>
+                      </li>
+
+                      <li>
+                        <a href="#">
+                          <i class="mdi mdi-account"></i> Mi Perfil
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="mdi mdi-email"></i> Solicitudes Nuevas
+                        </a>
+                      </li>
+
+                      <li class="dropdown-footer">
+                        <a href="{{ path('app_logout') }}"> <i class="fas fa-logout"></i> Log Out </a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </nav>
+          </header>
+
+          <div class="content-wrapper">
+            <div class="content">  
+
+            {# Incluyendo la vista que contiene los mensajes de alertas #}
+            {{ include("default/message.html.twig") }}
+
+
+            {% block content %}{% endblock %}
+
+
+            </div>
+          </div>
+
+          <footer class="footer mt-auto">
+            <div class="copyright bg-white">
+              <p>
+                Copyright © {{ 'now'|date('Y') }} Departamento de Infocomunicaciones CECMED.
+              </p>
+            </div>
+            <script>
+                var d = new Date();
+                var year = d.getFullYear();
+                document.getElementById("copy-year").innerHTML = year;
+            </script>
+          </footer>
+      </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+{% endblock %}
+
+
+
+
+
+
+
+

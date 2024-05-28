@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+
+	<style>
+            /** 
+                Set the margins of the page to 0, so the footer and the header
+                can be of the full height and width !
+             **/
+            @page {
+                margin: 0cm 0cm;
+            }
+
+
+            /** Define now the real margins of every page in the PDF **/
+            body {
+                margin-top: 3cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+                margin-bottom: 3cm;
+
+                text-align: justify;
+                font-family: Arial !important;
+    			font-size: 15px !important;
+            }
+
+
+
+            #watermark {
+                position: fixed;
+
+                /** 
+                    Establece una posición en la página para tu imagen
+                    Esto debería centrarlo verticalmente
+                **/
+                bottom:   11cm;
+                left:     9.5cm;
+
+                /** Cambiar las dimensiones de la imagen **/
+                width:    10cm;
+                height:   7cm;
+
+                /** Tu marca de agua debe estar detrás de cada contenido **/
+                z-index:  -1000;
+            }
+
+            /** Define the header rules **/
+            header {
+                position: fixed;
+                top: 0cm;
+                left: 0cm;
+                right: 0cm;
+                height: 1.5cm;
+
+                /** Extra personal styles **/
+                font-size: 7px;
+                margin-top: 0.5cm;
+                margin-left: 1cm;
+                margin-right: 1cm;
+            }
+
+            header > img{
+            	margin-left: 35%;
+            }
+
+            /** Define the footer rules **/
+            footer {
+                position: fixed; 
+                bottom: 0cm; 
+                left: 0cm; 
+                right: 0cm;
+                height: 1.5cm;
+
+                /** Extra personal styles **/
+                text-align: center;
+                font-size: 10px;
+                line-height: 0.4cm;
+            }
+        </style>
+
+
+
+
+</head>
+<body>
+
+	<header>
+        <img width="200" src="{{ absolute_url(asset('img/header2.png')) }}">
+    </header>
+
+    <footer>
+         Calle 5ta A, # 6020, entre 60 y 62, Reparto Miramar, Municipio Playa, La Habana. CUBA. C.P. 11300.<br>
+         Telef: (537) 2164100.  E-mail: cecmed@cecmed.cu Web: www.cecmed.cu
+    </footer>
+
+    <br>
+
+    <div style="text-align: right;">La Habana, {{ "now"|date("d F Y")|replace(
+        {'January': 'Enero',
+        'February': 'Febrero',
+        'March': 'Marzo',
+        'April': 'Abril',
+        'May': 'Mayo',
+        'June': 'Junio',
+        'July': 'Julio',
+        'August ': 'Agosto ',
+        'September': 'Septiembre',
+        'October ': 'Octubre',
+        'November ': 'Noviembre',
+        'December ': 'Diciembre'},
+
+            ) }}.
+
+	</div>
+
+	<br><br>
+
+	<div><center><b>DICTAMEN DE EVALUACIÓN DE INFORMES PERIÓDICOS DE SEGURIDAD</b></center></div>
+
+	<br>
+
+		<table border="1" width="100%" >
+		<tr>
+			<td width="80">&nbsp;</td>
+			<td width="280"><center><b>Nombre completo</b></center></td>
+			<td><center><b>Firma</b></center></td>
+		</tr>
+		<tr>
+			<td><b>Elaborado por</b></td>
+			<td>{{ solicitud.asignacion.evaluador.firma ? solicitud.asignacion.evaluador.firma : '-' }}<br><b>Especialista Sección de Vigilancia de Medicamentos</b></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><b>Aprobado por</b></td>
+			<td>{{ firmado | split('/', 2)[0] }}<br><b>{{ firmado | split('/', 2)[1] }}</b></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><b>Visto bueno</b></td>
+			<td>{{ revisado | split('/', 2)[0] }}<br><b>{{ revisado | split('/', 2)[1] }}</b></td>
+			<td></td>
+		</tr>
+	</table>
+
+	<br><br>
+
+
+	<b>Datos Generales</b>
+
+	<div id="watermark">
+        <img src="{{ absolute_url(asset('img/agua.png')) }}" height="100%" width="100%" />
+    </div>
+
+
+	<table border="1" width="100%" >
+		<tr>
+			<td width="50%"><b>Trámite: </b> {{solicitud.asignacion.tramite ? solicitud.asignacion.tramite : '-'}}</td>
+			<td><b>No. de Registro: </b> {{solicitud.noregistro ? solicitud.noregistro : '-'}}</td>
+		</tr>
+		<tr>
+			<td><b>Producto: </b> {{solicitud.asignacion.producto ? solicitud.asignacion.producto : '-'}}</td>
+			<td><b>Fortaleza: </b> {{solicitud.fortaleza ? solicitud.fortaleza : '-'}}</td>
+		</tr>
+		<tr>
+			<td><b>Forma Farmacéutica: </b> {{solicitud.formafarmaceutica ? solicitud.formafarmaceutica : '-'}}</td>
+			<td><b>Vías de Administración: </b> 
+				{% if solicitud.viaadministracion|length > 0 %}
+                    {% for via in solicitud.viaadministracion %}
+                        {{ via.nombre }}
+                    {% endfor %}
+                {% else %}
+                    -
+                {% endif %}
+			</td>
+		</tr>
+		<tr>
+			<td><b>Solicitante: </b> {{solicitud.solicitante ? solicitud.solicitante : '-'}}</td>
+			<td><b>Titular(s): </b> {{solicitud.titular ? solicitud.titular : '-'}}</td>
+		</tr>
+		<tr>
+			<td><b>IPS No.: </b> {{solicitud.noips ? solicitud.noips : '-'}}</td>
+			<td><b>IPS Anterior: </b> {{ solicitud.ipsanterior ? solicitud.ipsanterior|date('d-m-Y') : '-' }} </td>
+		</tr>
+		<tr>
+			<td><b>Período evaluado: </b> {{solicitud.periodoevaluado ? solicitud.periodoevaluado : '-'}}</td>
+			<td><b>Adecuado: </b> {{solicitud.periodoevaluadoadecuado ? solicitud.periodoevaluadoadecuado : '-'}}</td>
+		</tr>
+		<tr>
+			<td><b>Motivo de la presentación de este IPS: </b></td>
+			<td>{{solicitud.motivopresentacion ? solicitud.motivopresentacion : '-'}}</td>
+		</tr>
+		<tr>
+			<td><b>¿El IPS sigue la regulación nacional/ICH E2C?: </b></td>
+			<td>{{solicitud.regulacionpermitida ? solicitud.regulacionpermitida : '-'}}</td>
+		</tr>
+		<tr>
+			<td><b>¿Falta alguna sección o apéndice?: </b></td>
+			<td>{% for sf in solicitud.seccionfaltante %} ({{ sf }}) {% endfor %}</td>
+		</tr>
+		<tr>
+			<td><b>Fecha de inscripción CECMED: </b></td>
+			<td>{{ solicitud.fechainscripcionmed ? solicitud.fechainscripcionmed|date('Y-m-d') : '-' }}</td>
+		</tr>
+		<tr>
+			<td><b>Fecha de última renovación CECMED: </b></td>
+			<td>{{ solicitud.fechaultimarenovacion ? solicitud.fechaultimarenovacion|date('Y-m-d') : '-' }}</td>
+		</tr>
+		<tr>
+			<td><b>Indicaciones aprobadas: </b></td>
+			<td>{{ solicitud.indicacionesaprobadas ? solicitud.indicacionesaprobadas : '-'}}</td>
+		</tr>
+		<tr>
+			<td><b>Fecha de RCP vigente declarada IPS: </b></td>
+			<td>{{ solicitud.fecharcpvigente ? solicitud.fecharcpvigente|date('Y-m-d') : '-' }}</td>
+		</tr>
+		<tr>
+			<td><b>Fecha de internacional de nacimiento: </b></td>
+			<td>{{ solicitud.fechainternacionalmed ? solicitud.fechainternacionalmed|date('d-m-Y') : '-' }}</td>
+		</tr>
+		<tr>
+			<td><b>Países donde se encuentra comercializado: </b></td>
+			<td>{{ solicitud.paises ? solicitud.paises : '-' }}</td>
+		</tr>
+	</table>
+
+	<br><br>
+
+	<b>Resumen global de la evaluación</b><br><br>
+	<b>1. 	Exposición estimada durante el príodo cubierto.</b><br>
+	<i>(Exposición en ensayos clínicos y exposición en la comercialización. Método del cálculo de exposición, reproducibilidad del método.)</i><br>
+	<p>{% if solicitud.evaluacion.exposicionestimada  %}{{ solicitud.evaluacion.exposicionestimada }}{% else %} - {% endif %}</p><br>
+
+	<b>2. 	El TAC u otras autoridades reguladoras han implementado acciones debido a razones de seguridad?</b><br>
+	<p>{% if solicitud.evaluacion.accionesdeseguridad  %}{{ solicitud.evaluacion.accionesdeseguridad }}{% else %} - {% endif %}</p><br>
+
+	<b>3.	Han existido cambios en la Información de referencia del producto?</b><br>
+	<p>{% if solicitud.evaluacion.cambiosdeinformacion  %}{{ solicitud.evaluacion.cambiosdeinformacion }}{% else %} - {% endif %}</p><br>
+
+	<b>4.	Información de seguridad derivada de ensayos clínicos, estudios post-comercialización, registros, publicaciones, otras</b><br>
+	<p>{% if solicitud.evaluacion.informaciondeestudios  %}{{ solicitud.evaluacion.informaciondeestudios }}{% else %} - {% endif %}</p><br>
+
+	<b>5.	Análisis de casos individuales en el período </b><br>
+	<p>{% if solicitud.evaluacion.casosindividuales  %}{{ solicitud.evaluacion.casosindividuales }}{% else %} - {% endif %}</p><br>
+
+	<b>6.	Clasificación de los riesgos </b><br>
+	<table border="1" width="100%">
+		<tr>
+			<td width="50%">Riesgos importantes identificados</td>
+			<td width="50%">{{ solicitud.evaluacion.clasificacionriesgosimportantes ? solicitud.evaluacion.clasificacionriesgosimportantes : '-'}}</td>
+		</tr>
+		<tr>
+			<td>Riesgos potenciales identificados</td>
+			<td>{{ solicitud.evaluacion.clasificacionriesgospotenciales ? solicitud.evaluacion.clasificacionriesgospotenciales : '-'}}</td>
+		</tr>
+		<tr>
+			<td>Información faltante</td>
+			<td>{{ solicitud.evaluacion.clasificacionriesgosinformacionfaltante ? solicitud.evaluacion.clasificacionriesgosinformacionfaltante : '-'}}</td>
+		</tr>
+	</table><br><br><br>
+
+	<b>7.	¿Se caracterizaron todos los riesgos?</b><br>
+	<i>(según evidencia para vincular el riesgo con el medicamento, mecanismo potencial, caracterización del riesgo, factores de riesgo y grupos de riesgo, medidas para la minimización del riesgo, prevención, Impacto en el balance riesgo-beneficio del producto, impacto en la salud pública) </i><br>
+	<p>{% if solicitud.evaluacion.caracterizacionderiesgos  %}{{ solicitud.evaluacion.caracterizacionderiesgos }}{% else %} - {% endif %}</p><br>
+
+	<b>8.	Se identificaron nuevas señales? o se presentó información actualizad de señales en seguimiento?</b><br>
+	<p>{% if solicitud.evaluacion.sennalesdeseguridad  %}{{ solicitud.evaluacion.sennalesdeseguridad }}{% else %} - {% endif %}</p><br>
+
+	<b>9.	Se realiza evaluación integrada del beneficio-riesgo y esta es adecuada?</b><br>
+	<p>{% if solicitud.evaluacion.evaluacionbeneficioriesgo  %}{{ solicitud.evaluacion.evaluacionbeneficioriesgo }}{% else %} - {% endif %}</p><br>
+
+	<b>10.	¿Se presenta Plan de Gestión de Riesgos? </b><br>
+	<p>{% if solicitud.evaluacion.gestionderiesgo  %}{{ solicitud.evaluacion.gestionderiesgo }}{% else %} - {% endif %}</p><br>
+
+	<b>11.	¿Las conclusiones del TAC son pertinentes a la información brindada en el IPS?</b><br>
+	<p>{% if solicitud.evaluacion.conclusionesdeltitular  %}{{ solicitud.evaluacion.conclusionesdeltitular }}{% else %} - {% endif %}</p><br>
+
+	<b>Conclusión</b><br>
+	<p>IPS {{ solicitud.evaluacion.resultado.nombre ? solicitud.evaluacion.resultado.nombre : '-' }}</p><br>
+
+	
+	{% if solicitud.evaluacion.resultado.nombre == 'Aprobado' or solicitud.evaluacion.resultado.nombre == 'No procede' %}
+		&nbsp;
+	{% elseif solicitud.evaluacion.resultado.nombre == 'No aprobado' %}
+		<b>Información a completar</b>
+		<p>{% if solicitud.evaluacion.recomendacion  %}{{ solicitud.evaluacion.recomendacion }}{% else %} - {% endif %}</p><br>
+	{% else %}
+		<b>Recomendaciones</b>		
+		<p>{% if solicitud.evaluacion.recomendacion  %}{{ solicitud.evaluacion.recomendacion }}{% else %} - {% endif %}</p><br>
+	{% endif %}
+
+</body>
+</html>

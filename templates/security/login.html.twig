@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{% block title %}Vigilancia IPS{% endblock %}</title>
+    {% block stylesheets %}
+
+    <link href="{{ asset('librerias/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet"  type="text/css" />
+
+    <link href="{{ asset('librerias/fontawesome/css/all.min.css') }}" rel="stylesheet"  type="text/css" />
+
+    <link href="{{ asset('librerias/sleek/css/sleek.css') }}" rel="stylesheet" type="text/css" />
+
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" />
+
+    {% endblock %}
+</head>
+
+{% block body %}
+
+<body class="bg-light-gray" id="body">
+      <div class="container d-flex flex-column justify-content-between vh-100">
+      <div class="row justify-content-center mt-5">
+        <div class="col-xl-5 col-lg-6 col-md-10">
+          <div class="card">
+            <div class="card-header bg-primary">
+              <div class="app-brand">
+                <a href="#">
+                  <svg class="brand-icon" preserveAspectRatio="xMidYMid" width="30" height="33" viewBox="0 0 30 33">
+                    <g fill="none" fill-rule="evenodd">
+                      <path class="logo-fill-blue" fill="#7DBCFF" d="M0 4v25l8 4V0zM22 4v25l8 4V0z"></path>
+                      <path class="logo-fill-white" fill="#FFF" d="M11 4v25l8 4V0z"></path>
+                    </g>
+                  </svg>
+                  <span class="brand-name">Vigilancia IPS</span>
+                </a>
+              </div>
+            </div>
+            <div class="card-body pr-5 pl-5 pt-4 pb-4">
+
+              <h4 class="text-dark mb-4">Autenticación</h4>
+
+              <form method="post" action="{{ path('app_login_check') }}">
+
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <div class="row">
+                  <div class="form-group col-md-12 mb-4">
+                        <input type="text" value="{{ last_username }}" name="_username" id="inputUsername" class="form-control input-lg" required autofocus placeholder="Username">
+                  </div>
+                  <div class="form-group col-md-12 ">
+                        <input type="password" name="_password" id="inputPassword" class="form-control input-lg" required placeholder="Password">
+                  </div>
+
+                  <div class="col-md-12">
+                    <div class="d-flex mb-3 justify-content-between">
+                      <p><a class="text-blue" href="{{ path('app_forgot_password_request') }}">Olvidé mi contraseña</a></p>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block mb-4">Entrar</button>
+                  </div>
+                </div>
+              </form>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="copyright pl-0">
+        <p class="text-center">Copyright © {{ 'now'|date('Y') }} Departamento de Infocomunicaciones CECMED.
+        </p>
+      </div>
+    </div>
+
+</body>
+
+{% endblock %}

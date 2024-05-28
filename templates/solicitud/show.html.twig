@@ -1,0 +1,943 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+    <div class="row breadcrumb-wrapper justify-content-between">
+        <div class="col-6">
+            <h1>Solicitud {{ solicitud.id }}</h1>
+        </div>
+
+        {% if solicitud.estado == "Cerrado" %}
+        <div class="col-6 text-right">
+
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#firma">
+          Generar PDF
+        </button>    
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="firma" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Firmas del Dictámen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+
+                <div class="container">
+
+                    <div class="col-12">
+
+                        <div class="form-group">
+                            <label>Firmado por</label>
+                            <select class="form-control select2" id="firmado">
+                                <option value="Dra. Ismary Alfonso Orta, DrC/ Jefa Sección Vigilancia de Medicamentos">Dra. Ismary Alfonso Orta</option>
+                                <option value=""></option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Revisado por</label>
+                            <select class="form-control select2" id="revisado">
+                                <option value="Lic. Niovis Ceballos Rodríguez/ Jefa Departamento de Medicamentos y Biológicos">Lic. Niovis Ceballos Rodríguez</option>
+                                <option value=""></option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-danger" id="generarpdf">Generar PDF</button> 
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        {% endif %}
+    </div>
+
+    <div class="card card-table-border-none">
+        <div class="card-header card-header-border-bottom">
+            <h2>Datos de Solicitud</h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Trámite</label>
+                        <p>{{ solicitud.asignacion ? solicitud.asignacion.tramite : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Producto</label>
+                        <p>{{ solicitud.asignacion ? solicitud.asignacion.producto.nombre : '-' }}</p>
+                    </div>  
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Evaluador</label>
+                        <p>{{ solicitud.asignacion ? solicitud.asignacion.evaluador.nombre : '-' }}</p>
+                    </div>  
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row mt-3">
+
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Código</label>
+                        <p>{{ solicitud.codigo ? solicitud.codigo : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Fecha</label>
+                        <p>{{ solicitud.fecha ? solicitud.fecha|date('d-m-Y') : '-' }}</p>
+                    </div>  
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Estado</label>
+
+                        <p>
+                        {% if solicitud.estado == 'Nuevo' %}
+                        <span class="badge badge-primary">{{ solicitud.estado }}</span>
+                        {% elseif solicitud.estado == 'No Procede' %}
+                        <span class="badge badge-danger">{{ solicitud.estado }}</span>
+                        {% elseif solicitud.estado == 'Evaluado' %}
+                        <span class="badge badge-info">{{ solicitud.estado }}</span>
+                        {% else %}
+                        <span class="badge badge-success">{{ solicitud.estado }}</span> 
+                        {% endif %}
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Código de Trámite</label>
+                        <p>{{ solicitud.asignacion ? solicitud.asignacion.tramite : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Número de Registro</label>
+                        <p>{{ solicitud.noregistro ? solicitud.noregistro : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Producto</label>
+                        <p>{{ solicitud.asignacion ? solicitud.asignacion.producto : '-'}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Fortaleza</label>
+                        <p>{{ solicitud.fortaleza ? solicitud.fortaleza : '-' }}</p>
+                    </div>
+                </div>
+                
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Forma Farmacéutica</label>
+                        <p>{{ solicitud.formafarmaceutica ? solicitud.formafarmaceutica : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Vía de Administración</label>
+                        <p>
+                        {% if solicitud.viaadministracion|length > 0 %}
+                            {% for via in solicitud.viaadministracion %}
+                                {{ via.nombre }}
+                            {% endfor %}
+                        {% else %}
+                            -
+                        {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Solicitante</label>
+                        <p>{{ solicitud.solicitante ? solicitud.solicitante : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Titular</label>
+                        <p>{{ solicitud.titular ? solicitud.titular : '-' }} <b>{{ solicitud.nacionalidadtitular ? '('~solicitud.nacionalidadtitular~')' : ''  }}</b></p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Número IPS</label>
+                        <p>{{ solicitud.noips ? solicitud.noips : '-' }}</p>   
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Período Evaluado</label>
+                        <p>{{ solicitud.periodoevaluado ? solicitud.periodoevaluado : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Período Evaluado Adecuado</label>
+                        <p>{{ solicitud.periodoevaluadoadecuado ? solicitud.periodoevaluadoadecuado : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Motivo de Presentación</label>
+                        <p>{{ solicitud.motivopresentacion ? solicitud.motivopresentacion : '-' }}</p>   
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Regulación Nacional/ICH E2C</label>
+                        <p>{{ solicitud.regulacionpermitida ? solicitud.regulacionpermitida : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Sección Faltante</label>
+                        <p>{% if solicitud.seccionfaltante is empty %}-{% else %}{% for sf in solicitud.seccionfaltante %} ({{ sf }}) {% endfor %}{% endif %}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Fecha de Inscripción</label>
+                        <p>{{ solicitud.fechainscripcionmed ? solicitud.fechainscripcionmed|date('d-m-Y') : '-' }}</p>   
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Fecha de Última Renovación</label>
+                        <p>{{ solicitud.fechaultimarenovacion ? solicitud.fechaultimarenovacion|date('d-m-Y') : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Indicaciones Aprobadas</label>
+                        <p>{{ solicitud.indicacionesaprobadas ? solicitud.indicacionesaprobadas : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Fecha de RCP Vigente</label>
+                        <p>{{ solicitud.fecharcpvigente ? solicitud.fecharcpvigente|date('d-m-Y') : '-' }}</p>   
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Fecha Internacional de Nacimiento</label>
+                        <p>{{ solicitud.fechainternacionalmed ? solicitud.fechainternacionalmed|date('d-m-Y') : '-' }}</p>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label>Países de Comercialización</label>
+                        <p>{{ solicitud.paises ? solicitud.paises : '-'}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>Observaciones</label>  
+                        <p>{{ solicitud.observaciones ? solicitud.observaciones : '-' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>Documentación</label>
+                            <div id="solicitud-dropzone" class="dropzone">
+                            <div id="dropzone-files">
+                                <div class="fallback">
+                                <input name="file[]" type="file" multiple />
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {% if is_granted('ROLE_EVALUADOR') or is_granted('ROLE_SUPERVISOR')  or is_granted('ROLE_ADMINISTRADOR')%}
+                {% if solicitud.estado == "Nuevo" or (solicitud.evaluacion and solicitud.estado == "Evaluado") %}
+                    <div class="form-footer pt-4 mt-5 border-top">
+
+                        <a class="btn btn-success" href="{{ path('solicitud_edit', {'id': solicitud.id}) }}">Editar</a>
+                        <a href="#" id="{{ solicitud.id }}" class="eliminar_solicitud btn btn-danger" token="{{ csrf_token('delete' ~ solicitud.id) }}">Eliminar</a>
+
+                        {% if solicitud.estado == "Nuevo" %}
+                        <div class="float-right">    
+                            <button class="btn btn-secondary noprocede" id="{{ solicitud.id }}">No Procede</button>
+                            <a class="btn btn-primary" href="{{ path('evaluacion_new', {'solicitud': solicitud.id}) }}">Evaluar</a>
+                        </div>
+                        {% endif %}
+                            
+                    </div> 
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+
+
+    {% if solicitud.evaluacion %}
+        <div class="card card-table-border-none">
+
+            <div class="card-header card-header-border-bottom d-flex justify-content-between">
+                <h2>Datos de Evaluación</h2>
+            </div>
+
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Exposición estimada durante el periodo cubierto</label>
+                            <p>{{ solicitud.evaluacion.exposicionestimada ? solicitud.evaluacion.exposicionestimada : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>El TAC u otras autoridades reguladoras han implementado acciones debido a razones de seguridad</label>
+                            <p>{{ solicitud.evaluacion.accionesdeseguridad ? solicitud.evaluacion.accionesdeseguridad : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Han existido cambios en la Información de referencia del producto</label>
+                            <p>{{ solicitud.evaluacion.cambiosdeinformacion ? solicitud.evaluacion.cambiosdeinformacion : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Información de seguridad derivada de ensayos clínicos, estudios post-comercialización, registros, publicaciones, otras</label>
+                            <p>{{ solicitud.evaluacion.informaciondeestudios ? solicitud.evaluacion.informaciondeestudios : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Análisis de casos individuales en el período</label>
+                            <p>{{ solicitud.evaluacion.casosindividuales ? solicitud.evaluacion.casosindividuales : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Clasificación de los riesgos importantes</label>
+                            <p>{{ solicitud.evaluacion.clasificacionriesgosimportantes ? solicitud.evaluacion.clasificacionriesgosimportantes : '-' }}</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Clasificación de los riesgos potenciales</label>
+                            <p>{{ solicitud.evaluacion.clasificacionriesgospotenciales ? solicitud.evaluacion.clasificacionriesgospotenciales : '-' }}</p>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label>Clasificación de los riesgos de información faltante</label>
+                            <p>{{ solicitud.evaluacion.clasificacionriesgosinformacionfaltante ? solicitud.evaluacion.clasificacionriesgosinformacionfaltante : '-'}}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Caracterización de riesgos</label>
+                            <p>{{ solicitud.evaluacion.caracterizacionderiesgos ? solicitud.evaluacion.caracterizacionderiesgos : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Señales de seguridad</label>
+                            <p>{{ solicitud.evaluacion.sennalesdeseguridad ? solicitud.evaluacion.sennalesdeseguridad : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Evaluación beneficio-riesgo</label>
+                            <p>{{ solicitud.evaluacion.evaluacionbeneficioriesgo ? solicitud.evaluacion.evaluacionbeneficioriesgo : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Plan de gestión de riesgo</label>
+                            <p>{{ solicitud.evaluacion.gestionderiesgo ? solicitud.evaluacion.gestionderiesgo : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Conclusiones del titular</label>
+                            <p>{{ solicitud.evaluacion.conclusionesdeltitular ? solicitud.evaluacion.conclusionesdeltitular : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Resultado</label>
+                            <p>{{ solicitud.evaluacion.resultado.nombre ? solicitud.evaluacion.resultado.nombre : '-' }}</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label>Fecha</label>
+                            <p>{{ solicitud.evaluacion.fecha ? solicitud.evaluacion.fecha|date('d-m-Y') : '-' }}</p>
+                        </div>
+                    </div>  
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Información a completar / Recomendaciones </label>  
+                            <p>{{ solicitud.evaluacion.recomendacion ? solicitud.evaluacion.recomendacion : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Dictamen</label>
+                                <div id="evaluacion-dropzone" class="dropzone">
+                                    <div id="dropzone-files">
+                                    <div class="fallback">
+                                    <input name="file[]" type="file" multiple />
+                                    </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer pt-4 mt-5 border-top">
+
+                    {% if solicitud.estado == "Evaluado" %}
+                        <a  class="btn btn-success" href="{{ path('evaluacion_edit', {'id': solicitud.evaluacion.id}) }}">Editar</a>
+                        <a href="javascripts:;" id="{{ solicitud.evaluacion.id }}" class="eliminar_evaluacion btn btn-danger" token="{{ csrf_token('delete' ~ solicitud.evaluacion.id) }}">Eliminar</a>
+                    {% endif %}
+
+                    <div class="float-right">
+                        {% if solicitud.evaluacion %}                                
+
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#seguimientos">
+                              {{ solicitud.evaluacion.seguimientos|length }} Seguimiento(s)
+                            </button>    
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="seguimientos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Listado de Seguimientos</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+
+                                    <div class="container">
+
+                                        <div class="col-12">
+
+                                        {% if solicitud.evaluacion.seguimientos is not empty %}
+                                        {% for seguimiento in solicitud.evaluacion.seguimientos %}
+
+                                            <div class="media pt-3 pb-3 align-items-center justify-content-between">
+                                                <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-primary text-white">
+                                                    <i class="fa fa-comments font-size-20"></i>
+                                                </div>
+                                                <div class="media-body pr-3 ">
+                                                    <a class="mt-0 mb-1 font-size-15 text-dark" href="javascript:;">{{ seguimiento.user }} / {{ seguimiento.fecha|date('d-m-Y') }}</a>
+                                                    <p>{{seguimiento.descripcion}}</p>
+                                                </div>
+
+                                                <span class=" font-size-12 d-inline-block mr-3"></span>
+
+                                                {% if solicitud.estado == 'Evaluado' %}
+                                                    <a class="btn btn-success mr-3" href="{{ path('seguimiento_edit', {'id': seguimiento.id }) }}">Editar</a>
+                                                    <a class="btn btn-danger mr-3 eliminar_seguimiento" href="javascript:;" id="{{seguimiento.id}}" token="{{ csrf_token('delete' ~ seguimiento.id ) }}">Eliminar</a>
+                                                {% endif %}
+                                            </div>
+
+                                        {% endfor %}
+                                        {% else %}
+                                            <div class="pt-3 pb-3"> No hay seguimientos para mostrar</div>
+                                        {% endif %}
+                                        </div>
+
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    {% if solicitud.estado == 'Evaluado' %}
+                                        <a href="{{ path('seguimiento_new', {'evaluacion': solicitud.evaluacion.id }) }}" class="btn btn-primary">Insertar</a>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                        {% endif %}
+                        {% if solicitud.estado == "Cerrado" and is_granted('ROLE_ADMINISTRADOR')%} 
+                            <button class="btn btn-primary cerrar" id="{{ solicitud.id }}">Re Abrir</button>
+                        {% endif %}
+                        
+                        {% if solicitud.estado == "Evaluado" %}
+                            <button class="btn btn-primary cerrar" id="{{ solicitud.id }}">Cerrar</button>
+                        {% endif %}
+                    </div>
+                </div> 
+
+            </div>
+        </div>
+    {% endif %} 
+
+  
+{% endblock %}
+
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+        select_menu('solicitud_menu');
+
+
+            Dropzone.autoDiscover = false;
+            var onSubmit = false;
+
+
+            var id = {{ solicitud.id }};
+            var eva = null;
+
+            {% if solicitud.evaluacion %}
+                var eva = {{ solicitud.evaluacion.id }};
+                var estado = "{{ solicitud.estado }}";
+
+                var myDropzone2 = new Dropzone("div#evaluacion-dropzone", { 
+
+
+                    init: function () {
+
+                        if(estado == "Cerrado"){
+                            $('#evaluacion-dropzone').find('.dz-message').fadeOut(300);
+                            this.disable();
+
+                            {% if not solicitud.evaluacion.dictamen %}
+                                $('#evaluacion-dropzone').html('<p style="color: #8a909d">No hay archivos para mostrar.</p>');                        
+                            {% endif %}
+                            
+                        }
+
+                        this.on("success", function (file, data) {//subido desde el cliente
+                            $(file.previewElement).find('.dz-filename').data("archivo", data.archivo);
+                            $(file.previewElement).find('.dz-filename').data("uri", data.uri);
+                            $(file.previewElement).find('.dz-filename').data("from", 'cliente');//para saber que vino desde el cliente
+                        });
+
+
+                        //on click en medio del preview template para abrir o download el archivo
+                        $(document).on('click', "#evaluacion-dropzone>#dropzone-files>.dz-preview>.dz-details>.dz-filename", function () {
+
+                            url = '{{ asset('uploads/evaluacion_dictamen/') }}';
+
+                            window.open(url + $(this).data('archivo'), '_blank');
+
+                        });
+
+                        $.ajax({
+                            url: Routing.generate("evaluacion_loadfile", { id: eva }), 
+                            cache: false,
+                            success: function (data) {
+                                $.each(data, function (key, value) {
+                                    var mockFile2 = {
+                                        name: value.name,
+                                        archivo: value.archivo,
+                                        size: value.size,
+                                        uri: value.uri
+                                    };
+                                    myDropzone2.options.addedfile.call(myDropzone2, mockFile2);
+                                    $(mockFile2.previewElement).find('.dz-filename').data("archivo", value.archivo);
+                                    $(mockFile2.previewElement).find('.dz-filename').data("uri", value.uri + "\\" + value.archivo);
+                                    $(mockFile2.previewElement).find('.dz-filename').data("from", "server");//para saber que vino del server
+
+                                    var extension = value.archivo.substr(value.archivo.lastIndexOf(".") + 1);
+
+                                    myDropzone2.emit("complete", mockFile2, this);
+                                });
+                            }
+                        });
+                            
+                        this.on("complete", function (file, data) {
+                            $(file.previewElement).find('.progress').fadeOut(300);//esconder la barra progresiva
+                            $(file.previewElement).appendTo($("#evaluacion-dropzone>#dropzone-files"));
+                            $(file._removeLink).text("Eliminar");
+
+                        });
+                        this.on("addedfile", function (file) {
+                            $(file.previewElement).appendTo($("#evaluacion-dropzone>#dropzone-files"));
+                            $(file._removeLink).text("Eliminar");
+                            
+                        });
+
+                    },
+
+                    removedfile: function(file) {
+
+                        Swal.fire({
+                            title: "CONFIRMACIÓN",
+                            text: "Esta acción no se podrá deshacer. Seguro que desea eliminar este elemento?",
+                            type: "error",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn btn-danger",
+                            cancelButtonClass: "btn btn-light",
+                            cancelButtonText: "No, cancelar!",
+                            confirmButtonText: "Si, eliminar!",
+                            showLoaderOnConfirm: true,
+
+                            preConfirm: function() {
+
+                                $(document).find(file.previewElement).remove();
+                                $.ajax({
+                                    url: Routing.generate("evaluacion_deletefile", { id: eva }),
+                                    cache: false,
+                                    data: { name: file.name, },
+                                    success: function (data) {
+
+                                    }
+                                });
+                            }
+                        });
+
+                    },
+
+                    //autoProcessQueue: false,//para q no suba automaticamente
+                    url: Routing.generate("evaluacion_uploadfile", { id: eva }),
+                    headers: {"eva": eva},
+                    paramName: "upload",
+                    maxFilesize: 5,
+                    {% if solicitud.estado != "Cerrado" %}
+                    addRemoveLinks: true,
+                    {% else %}
+                    addRemoveLinks: false,
+                    {% endif %}
+                    acceptedFiles: ".pdf,.doc,.docx,.xlsx,.xls,.ppt,.pps,image/*",
+                    dictDefaultMessage: '<i class="upload-icon ace-icon fas fa-cloud-upload-alt text-primary fa-5x"></i>',
+                    dictResponseError: 'Se produjo un error mientras se trataba de subir el archivo',
+                    previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n  " +
+                    "  <div class=\"dz-filename\"><span data-dz-name></span></div>\n  " +
+                    "  <div class=\"dz-size\" data-dz-size></div>\n  " +
+                    "  <img data-dz-thumbnail />\n  " +
+                    "</div>\n " +
+                    " <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n " +
+                    " <div class=\"dz-success-mark\"><span></span></div>\n" +
+                    "<div class=\"dz-error-mark\"><span></span></div>\n</div>" /*+
+                     " <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"*/
+                   
+                });
+
+            {% endif %}
+
+
+
+
+
+            var myDropzone = new Dropzone("div#solicitud-dropzone", { 
+
+                init: function () {
+
+                    if(eva){
+                        $('#solicitud-dropzone').find('.dz-message').fadeOut(300);
+                        this.disable();
+
+                        {% if not solicitud.documentacion %}
+                            $('#solicitud-dropzone').html('<p style="color: #8a909d">No hay archivos para mostrar.</p>');                        
+                        {% endif %}
+                    }
+
+
+                    this.on("success", function (file, data) {//subido desde el cliente
+                        $(file.previewElement).find('.dz-filename').data("archivo", data.archivo);
+                        $(file.previewElement).find('.dz-filename').data("uri", data.uri);
+                        $(file.previewElement).find('.dz-filename').data("from", 'cliente');//para saber que vino desde el cliente
+                    });
+
+
+                    //on click en medio del preview template para abrir o download el archivo
+                    $(document).on('click', "#solicitud-dropzone>#dropzone-files>.dz-preview>.dz-details>.dz-filename", function () {
+
+                        url = '{{ asset('uploads/solicitud_documentacion/') }}';
+
+                        window.open(url + $(this).data('archivo'), '_blank');
+
+                    });
+
+                    $.ajax({
+                        url: Routing.generate("solicitud_loadfile", { id: id }), 
+                        cache: false,
+                        success: function (data) {
+                            $.each(data, function (key, value) {
+                                var mockFile = {
+                                    name: value.name,
+                                    archivo: value.archivo,
+                                    size: value.size,
+                                    uri: value.uri
+                                };
+                                myDropzone.options.addedfile.call(myDropzone, mockFile);
+                                $(mockFile.previewElement).find('.dz-filename').data("archivo", value.archivo);
+                                $(mockFile.previewElement).find('.dz-filename').data("uri", value.uri + "\\" + value.archivo);
+                                $(mockFile.previewElement).find('.dz-filename').data("from", "server");//para saber que vino del server
+
+                                var extension = value.archivo.substr(value.archivo.lastIndexOf(".") + 1);
+
+                                myDropzone.emit("complete", mockFile, this);
+                            });
+                        }
+                    });
+                        
+                    this.on("complete", function (file, data) {
+                        $(file.previewElement).find('.progress').fadeOut(300);//esconder la barra progresiva
+
+                        if(eva){
+                            $(file.previewElement).find('.dz-remove').fadeOut(300);//esconder la barra progresiva
+                        }
+
+                        $(file._removeLink).text("Eliminar");
+                        $(file.previewElement).appendTo($("#solicitud-dropzone>#dropzone-files"));
+
+                    });
+                    this.on("addedfile", function (file) {
+                        $(file.previewElement).appendTo($("#solicitud-dropzone>#dropzone-files"));
+                        $(file._removeLink).text("Eliminar");
+                    });
+
+                },
+
+                removedfile: function(file) {
+
+                    Swal.fire({
+                        title: "CONFIRMACIÓN",
+                        text: "Esta acción no se podrá deshacer. Seguro que desea eliminar este elemento?",
+                        type: "error",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn btn-danger",
+                        cancelButtonClass: "btn btn-light",
+                        cancelButtonText: "No, cancelar!",
+                        confirmButtonText: "Si, eliminar!",
+                        showLoaderOnConfirm: true,
+
+                        preConfirm: function() {
+
+                            $(document).find(file.previewElement).remove();
+                            $.ajax({
+                                url: Routing.generate("solicitud_deletefile", { id: id }),
+                                cache: false,
+                                data: { name: file.name, },
+                                success: function (data) {
+
+                                }
+                            });
+                        }
+                    });
+
+                },
+
+                //autoProcessQueue: false,//para q no suba automaticamente
+                url: Routing.generate("solicitud_uploadfile", { id: id }),
+                headers: {"id": id},
+                paramName: "upload",
+                maxFilesize: 5,
+                addRemoveLinks: true,
+                acceptedFiles: ".pdf,.doc,.docx,.xlsx,.xls,.ppt,.pps,image/*",
+                dictDefaultMessage: '<i class="upload-icon ace-icon fas fa-cloud-upload-alt text-primary fa-5x"></i>',
+                dictResponseError: 'Se produjo un error mientras se trataba de subir el archivo',
+                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n  " +
+                "  <div class=\"dz-filename\"><span data-dz-name></span></div>\n  " +
+                "  <div class=\"dz-size\" data-dz-size></div>\n  " +
+                "  <img data-dz-thumbnail />\n  " +
+                "</div>\n " +
+                " <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n " +
+                " <div class=\"dz-success-mark\"><span></span></div>\n" +
+                "<div class=\"dz-error-mark\"><span></span></div>\n</div>" /*+
+                " <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"*/
+                   
+            });
+
+
+
+
+
+
+        $(document).ready(function() {
+
+            /* Funcionalidad para el comportamiento de la confirmación para eliminar elemento */
+            $(".form-footer").on("click", ".eliminar_solicitud", function() {
+                var id = $(this).attr("id");
+                var token = $(this).attr("token");
+                var rutaEliminar = Routing.generate("solicitud_delete", { id: id });
+                var rutaRedirect = Routing.generate("solicitud_index");
+                createDelete(rutaEliminar, rutaRedirect, token);
+            });
+
+            /* Funcionalidad para el comportamiento de la confirmación para eliminar elemento */
+            $(".form-footer").on("click", ".eliminar_evaluacion", function() {
+                var solicitud = {{ solicitud.id }};
+                var id = $(this).attr("id");
+                var token = $(this).attr("token");
+                var rutaEliminar = Routing.generate("evaluacion_delete", { id: id });
+                var rutaRedirect = Routing.generate("solicitud_show" , { id: solicitud });
+                createDelete(rutaEliminar, rutaRedirect, token);
+            });
+
+
+            $(".modal").on("click", ".eliminar_seguimiento", function() {
+                var solicitud = {{ solicitud.id }};
+                var id = $(this).attr("id");
+                var token = $(this).attr("token");
+                var rutaEliminar = Routing.generate("seguimiento_delete", { id: id });
+                var rutaRedirect = Routing.generate("solicitud_show" , { id: solicitud });
+                createDelete(rutaEliminar, rutaRedirect, token);
+            });
+
+
+            $(".form-footer").on("click", ".noprocede", function() {
+                var id = $(this).attr('id');
+              Swal.fire({
+                title: "CONFIRMACIÓN",
+                text:
+                  "Seguro que no procede esta solicitud?",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: "btn btn-danger",
+                cancelButtonClass: "btn btn-light",
+                cancelButtonText: "No!",
+                confirmButtonText: "Si!",
+                showLoaderOnConfirm: true,
+
+                preConfirm: function() {
+                  $.ajax({
+                    url: Routing.generate("solicitud_noprocede", { id: id }),
+                    method: "POST"
+                  }).always(function() {
+                      swal.close();
+                      window.location.href = Routing.generate("solicitud_show" , { id: id });
+                    });
+                }
+              });
+
+            });
+
+            $(".form-footer").on("click", ".cerrar", function() {
+                var id = $(this).attr('id');
+                
+
+              Swal.fire({
+                title: "CONFIRMACIÓN",
+                text:
+                  "Seguro que desea " + $(this).html().toLowerCase() + " esta solicitud?",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: "btn btn-danger",
+                cancelButtonClass: "btn btn-light",
+                cancelButtonText: "No!",
+                confirmButtonText: "Si!",
+                showLoaderOnConfirm: true,
+
+                preConfirm: function() {
+                  $.ajax({
+                    url: Routing.generate("solicitud_cerrar", { id: id }),
+                    method: "POST"
+                  }).always(function() {
+                      swal.close();
+                      window.location.href = Routing.generate("solicitud_show" , { id: id });
+                    });
+                }
+              });
+
+            });
+
+            $('#generarpdf').on("click", function(){
+                id = {{ solicitud.id }}
+                firmado = $('#firmado').val()
+                revisado = $('#revisado').val()
+                route = Routing.generate('solicitud_pdf',{ id: id, firmado: firmado, revisado: revisado })
+
+                location.href = route;
+
+                $('#firma').modal('toggle');
+
+            });
+
+        });
+
+    </script>
+
+{% endblock %}

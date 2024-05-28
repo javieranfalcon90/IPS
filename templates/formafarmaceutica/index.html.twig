@@ -1,0 +1,71 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+
+
+    <div class="row breadcrumb-wrapper justify-content-between" style="margin-bottom: 19.6px !important;">
+        <div class="col-6">
+            <h1>Forma Farmacéutica</h1>
+        </div>
+        <div class="col-6 text-right">
+            <a class="btn btn-primary" href="{{ path('formafarmaceutica_new') }}"> INSERTAR</a>
+        </div>
+    </div>
+
+
+    <div class="card card-default">
+        <div class="card-header card-header-border-bottom">
+            <h2>Listado de formas farmacéuticas</h2>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+
+                    <table class="table table-hover" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nombre</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+
+    {{ parent() }}
+    <script>
+
+    select_menu('configuracion_menu');
+
+        $(document).ready(function() {
+
+            /* Generando el componente DataTable */
+            var Nosortcol = [0,2];
+            var route = Routing.generate('formafarmaceutica_dataTable');
+            var dataTable = createDataTable(Nosortcol, route);
+
+    /* Funcionalidad para el comportamiento de la confirmación para eliminar elemento */
+    $("#dataTable tbody").on("click", ".eliminar", function() {
+      var id = $(this).attr("id");
+      var token = $(this).attr("token");
+      var rutaEliminar = Routing.generate("formafarmaceutica_delete", { id: id });
+      var rutaRedirect = Routing.generate("formafarmaceutica_index");
+      createDelete(rutaEliminar, rutaRedirect, token);
+    });
+
+        });
+
+    </script>
+
+{% endblock %}

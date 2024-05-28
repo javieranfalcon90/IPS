@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seguimiento index{% endblock %}
+
+{% block body %}
+    <h1>Seguimiento index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Descripcion</th>
+                <th>Fecha</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for seguimiento in seguimientos %}
+            <tr>
+                <td>{{ seguimiento.id }}</td>
+                <td>{{ seguimiento.descripcion }}</td>
+                <td>{{ seguimiento.fecha ? seguimiento.fecha|date('Y-m-d') : '' }}</td>
+                <td>
+                    <a href="{{ path('seguimiento_show', {'id': seguimiento.id}) }}">show</a>
+                    <a href="{{ path('seguimiento_edit', {'id': seguimiento.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('seguimiento_new') }}">Create new</a>
+{% endblock %}
